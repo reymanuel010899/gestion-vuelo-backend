@@ -3,6 +3,8 @@ from django.contrib import admin
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+from django.conf import settings
+from django.conf.urls.static import static
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -23,3 +25,6 @@ urlpatterns = [
     path('users/', include('apps.users.urls', namespace='users')),
     path('gestion/', include('apps.gestion.urls', namespace='gestion'))
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

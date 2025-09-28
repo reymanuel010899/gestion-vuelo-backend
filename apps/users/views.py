@@ -77,7 +77,7 @@ class  Crearusuarioview(APIView):
             password = serializer.validated_data['password']
             repeat_password = serializer.validated_data['repect_password']
             if password != repeat_password:
-                return Response({'erro':'usuario creado sastifactoriamente'}, status=status.HTTP_404_NOT_FOUND)
+                return Response({'error':'usuario creado sastifactoriamente'}, status=status.HTTP_404_NOT_FOUND)
 
             gmail = serializer.validated_data['gmail']
             nombre = serializer.validated_data['nombre']
