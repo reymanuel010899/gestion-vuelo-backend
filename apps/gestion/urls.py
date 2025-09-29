@@ -9,7 +9,7 @@ urlpatterns = [
     path("api/destinations/<int:pk>/", views.DestinationRetrieveUpdateDestroyView.as_view(), name="destination-detail"),
 
     # Flight Requests
-    path("api/flight-requests/", views.FlightRequestListCreateView.as_view(), name="flight-request-list-create"),
+    path("api/flight-requests/", views.TripsListCreateView.as_view(), name="flight-request-list-create"),
     path("api/flight-requests/<int:pk>/", views.FlightRequestRetrieveView.as_view(), name="flight-request-detail"),
     path("api/flight-requests/<int:pk>/mark_reserved/", views.FlightRequestMarkReservedView.as_view(), name="flight-request-mark-reserved"),
 
@@ -18,5 +18,8 @@ urlpatterns = [
     path("api/notifications/<int:pk>/", views.NotificationRetrieveView.as_view(), name="notification-detail"),
 
     # Airports
-   path("api/airports/", views.AirportListView.as_view(), name="airport-list"),
+    path("api/airports/", views.AirportListView.as_view(), name="airport-list"),
+
+    # Trips
+     path("api/trips/", views.TripsListView.as_view(), name="airport-list"),
 ]

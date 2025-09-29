@@ -3,10 +3,10 @@ from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from django.db.models import Q
 from rest_framework.permissions import AllowAny, IsAuthenticated 
-from .models import Destination, Airport,  FlightRequest, Notification
-from .serializers import DestinationSerializer, AirportSerializer, FlightRequestSerializer, NotificationSerializer
+from .models import  DepartureTime, Destination, Airport,  FlightRequest, Notification, Trips
+from .serializers import DepartureTimeSerializer, DestinationSerializer, AirportSerializer, FlightRequestSerializer, NotificationSerializer, TripSerializer
 
-class AirportListView(generics.ListAPIView): # <--- NUEVA VISTA
+class AirportListView(generics.ListAPIView):
     queryset = Airport.objects.all()
     serializer_class = AirportSerializer
     permission_classes = [AllowAny] # Permite a cualquier usuario buscar aeropuertos
@@ -33,18 +33,24 @@ class DestinationRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView
     serializer_class = DestinationSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-class FlightRequestListCreateView(generics.ListCreateAPIView):
-    serializer_class = FlightRequestSerializer
+class TripsListCreateView(generics.ListCreateAPIView):
+    serializer_class = TripSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user
         if user.is_staff:
-            return FlightRequest.objects.all()
-        return FlightRequest.objects.filter(user=user)
+            return Trips.objects.all()
+        
+        return Trips.objects.filter(user=user)
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        airport_from = Airport.objects.get(name__icontains=self.request.data.get('destination_from', {}).get('name'))
+        airport_to = Airport.objects.get(name__icontains=self.request.data.get('destination_to', {}).get('name'))
+        origin = Destination.objects.get(name=airport_from.destination.name)
+        destination = Destination.objects.get(name=airport_to.destination.name)
+        serializer.save(user=self.request.user, destination_from=origin,
+        destination_to=destination, is_active=True)
 
 class FlightRequestRetrieveView(generics.RetrieveAPIView):
     queryset = FlightRequest.objects.all()
@@ -62,6 +68,22 @@ class FlightRequestMarkReservedView(generics.UpdateAPIView):
         flight_request.save()
         return Response({"status": "marked as reserved"}, status=status.HTTP_200_OK)
 
+class TripsListView(generics.ListAPIView):
+    queryset = Trips.objects.all()
+    serializer_class = TripSerializer
+    permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        destination = self.request.query_params.get('to', None)
+        origin = self.request.query_params.get('from', None)
+        if destination and origin:
+            queryset = queryset.filter(
+              destination_from__name=origin, destination_to__name=destination
+            )
+            return queryset
+        else:
+            return []
 
 class NotificationListView(generics.ListAPIView):
     serializer_class = NotificationSerializer
