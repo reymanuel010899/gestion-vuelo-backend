@@ -1,12 +1,29 @@
-##### gestion-vuelo-backend #####
------ clonar repositorio -----
+# Gestion Vuelo Backend
+
+Este es el backend del proyecto **Gestion Vuelo**.  
+
+---
+
+## 🔹 Clonar y ejecutar el proyecto (SQLite por defecto)
+
+```bash
+# Clonar repositorio
+git clone https://github.com/reymanuel010899/gestion-vuelo-backend.git
 cd gestion-vuelo-backend
+
+# Crear y activar entorno virtual
 python3 -m venv venv
 source venv/bin/activate
+
+# Instalar dependencias
 pip install -r requirements.txt
+
+# Crear migraciones y aplicarlas
 python3 manage.py makemigrations
 python3 manage.py migrate
-python3 manage.py runserver 
+
+# Ejecutar servidor
+python3 manage.py runserver
 
 
 
