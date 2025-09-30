@@ -6,7 +6,6 @@ source venv/bin/activate
 pip install -r requirements.txt
 python3 manage.py makemigrations
 python3 manage.py migrate
-sqlite3 db.sqlite3 < data.sql
 python3 manage.py runserver 
 
 
