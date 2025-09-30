@@ -39,6 +39,7 @@ class Trips(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="trips_user", null=True, blank=True)
     destination_from = models.ForeignKey(Destination, on_delete=models.PROTECT, related_name="trips_from", null=True, blank=True)
     destination_to = models.ForeignKey(Destination, on_delete=models.PROTECT, related_name="trips_to", null=True, blank=True)
+    airport = models.ForeignKey('Airport', on_delete=models.PROTECT, related_name="trips_airport", null=True, blank=True)
     code = models.CharField(max_length=10, unique=True, blank=True, null=True)
     passengers = models.IntegerField(null=True, blank=True)
     exit_date = models.DateField(null=True, blank=True)
@@ -53,9 +54,10 @@ class Trips(models.Model):
         return f"FROM: {self.destination_from.name} TO:  {self.destination_to.name} - USER: {self.user.username if self.user else '' }"
     
 class DepartureTime(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="departure_times", null=True, blank=True)
     airlines = models.ForeignKey(Airlines, on_delete=models.PROTECT, related_name="departure_times", null=True, blank=True)
-    trip = models.ForeignKey(Trips, on_delete=models.PROTECT, related_name="departure_times", null=True, blank=True)
+    origin = models.ForeignKey(Destination, on_delete=models.PROTECT, related_name="origin_from", null=True, blank=True)
+    destination = models.ForeignKey(Destination, on_delete=models.PROTECT, related_name="destination_to", null=True, blank=True)
+    airport = models.ForeignKey('Airport', on_delete=models.PROTECT, related_name="departure_times_airport", null=True, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     duration = models.IntegerField(null=True, blank=True)
     time = models.TimeField(null=True, blank=True)
@@ -82,6 +84,7 @@ class Airport(models.Model):
     
 class FlightRequest(models.Model):
     STATUS_CHOICES = [
+        ("search", "search"),
         ("pending", "Pending"),
         ("reserved", "Reserved"),
         ("cancelled", "Cancelled"),
@@ -110,8 +113,7 @@ def post_save_flight_request(sender, instance, created, **kwargs):
         fligh, created = FlightRequest.objects.get_or_create(
             user=instance.user,
             trip=instance,
-            status="pending"    
-            # departure_time=instance,
+            status="search"    
         )
         if created:
             Notification.objects.create(

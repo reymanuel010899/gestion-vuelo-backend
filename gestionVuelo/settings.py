@@ -101,12 +101,12 @@ WSGI_APPLICATION = 'gestionVuelo.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 # DATABASES = {
 #     'default': {
-#         'ENGINE': os.getenv('ENGINE'),
-#         'NAME': os.getenv('NAME'),
-#         'USER':  os.getenv('USUARIO'),  # Reemplaza con tu usuario de la base de datos
-#         'PASSWORD': os.getenv('PASSWORD'),  # Reemplaza con la contraseña de tu base de datos
-#         'HOST': os.getenv('HOST'),  # Punto de enlace de tu RDS
-#         'PORT': os.getenv('PORT'),  # Puerto de PostgreSQL
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'gestion_vuelo',
+#         'USER':  'gestion_vuelo_user',  # Reemplaza con tu usuario de la base de datos
+#         'PASSWORD': 'reymanuel010899',  # Reemplaza con la contraseña de tu base de datos
+#         'HOST': 'localhost',  # Punto de enlace de tu RDS
+#         'PORT': 5432,  # Puerto de PostgreSQL
 #     }
 # }
 DATABASES = {
@@ -120,6 +120,7 @@ CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
     'http://localhost:8000',
     'http://localhost:5173',
+    'http://localhost:5174',
     'http://127.0.0.1:8000',
     'http://127.0.0.1:3000'
 ]
@@ -128,6 +129,7 @@ CSRF_TRUSTED_ORIGINS = [
     'http://localhost:3000',
     'http://localhost:8000',
     'http://localhost:5173',
+    'http://localhost:5174',
     'http://127.0.0.1:8000',
     'http://127.0.0.1:3000'
 ]

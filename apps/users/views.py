@@ -9,8 +9,6 @@ from .models import User
 from .serializers import LoginZerializer, LogoutSerializer
 
 
-
-
 # Create your views here.
 class LoginView(APIView):
     permission_classes = [AllowAny,] 
@@ -27,6 +25,7 @@ class LoginView(APIView):
                     'username': usuario.username,
                     'gmail': usuario.gmail,
                     'nombre': usuario.nombre,
+                    'is_staff': usuario.is_staff,
                     'token': token.key
                 }
                 if created:
@@ -36,11 +35,6 @@ class LoginView(APIView):
                     token = Token.objects.create(user=usuario)
                     data['token'] = token.key  # ⚡ actualizar token en la respuesta
                     return Response({'messege':'usuario creado exitoso', 'user':data}, status=status.HTTP_200_OK)
-                # else:
-                #     token_instans = Token.objects.get(key=token)
-                #     token_instans.delete()
-                #     token = Token.objects.create(user=usuario)
-                #     return Response({'messege':'usuario creado exitoso', 'user':data}, status=status.HTTP_200_OK)
             return Response({'error':'el usuario esta inactivo, intentelo en otro momento'}, status=status.HTTP_404_NOT_FOUND)
         else:    
             return Response({'usuario':'no encontrado , intente de nuevo'}, status=status.HTTP_404_NOT_FOUND)

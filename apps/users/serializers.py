@@ -9,6 +9,7 @@ class UserSerializer(serializers.ModelField):
             'username',
             'gmail',
             'nombre',
+            'is_staff'
             "is_superuser"
         )
 

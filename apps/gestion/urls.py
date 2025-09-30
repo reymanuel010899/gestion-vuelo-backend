@@ -10,8 +10,9 @@ urlpatterns = [
 
     # Flight Requests
     path("api/flight-requests/", views.TripsListCreateView.as_view(), name="flight-request-list-create"),
+    path('api/flight-requests/mark-reserved/<int:pk>/', views.FlightRequestMarkReservedView.as_view(), name='flight-mark-reserved'),
+    path("api/flight-requests-list/", views.FlightRequestListView.as_view(), name="flight-request-list"),
     path("api/flight-requests/<int:pk>/", views.FlightRequestRetrieveView.as_view(), name="flight-request-detail"),
-    path("api/flight-requests/<int:pk>/mark_reserved/", views.FlightRequestMarkReservedView.as_view(), name="flight-request-mark-reserved"),
 
     # Notifications
     path("api/notifications/", views.NotificationListView.as_view(), name="notification-list"),
@@ -20,6 +21,7 @@ urlpatterns = [
     # Airports
     path("api/airports/", views.AirportListView.as_view(), name="airport-list"),
 
-    # Trips
-     path("api/trips/", views.TripsListView.as_view(), name="airport-list"),
+    # Departure-time
+    path("api/departure-time/", views.DepartureTimeListView.as_view(), name="departure-time-list"),
+    path("api/departure-time/trips-buy/<int:pk>/", views.TripBuyView.as_view(), name="departure-time-list")
 ]
